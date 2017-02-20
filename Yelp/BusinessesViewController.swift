@@ -12,8 +12,10 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     var businesses: [Business]!
     
-    var searchBar = UISearchBar()
     
+    var searchBar = UISearchBar()
+    var filteredSearch: String?
+
     //tableView OUTLET
     @IBOutlet weak var tableView: UITableView!
     
@@ -81,18 +83,40 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
     }
     
-    /*
-    // SEARCH BAR: TEXT DID CHANGE
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        businesses = searchText.isEmpty ? businesses : businesses?.filter({(data: Array) -> Bool in
-            let title = data["name"] as! String
-            return title.range(of: searchText, options: .caseInsensitive) != nil
-        })
-        
+    
+    // SEARCH BAR
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredSearch = searchBar.text
+        Business.searchWithTerm(term: filteredSearch!, completion: { (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            // Updates The tableView after data is taken
+            self.tableView.reloadData()
+            if let businesses = businesses {
+                for business in businesses {
+                    print(business.name!)
+                    print(business.address!)
+                }
+            }
+            
+        }
+        )
         tableView.reloadData()
     }
+    
+    //
+    // SEARCH BAR: TEXT DID CHANGE
+    //    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    //
+    //        businesses = searchText.isEmpty ? businesses : businesses?.filter({(business: Business) -> Bool in
+    //            let name = business.name
+    //            return name.range(of: searchText, options: .caseInsensitive) != nil
+    //        })
+    //
+    //        tableView.reloadData()
+    //    }
 
+    
     
     
     // SEARCH BAR TEXT
@@ -107,7 +131,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         searchBar.text = ""
         searchBar.resignFirstResponder()
     }
-     */
+ 
 
     
     /*
